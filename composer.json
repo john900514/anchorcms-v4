@@ -10,7 +10,7 @@
     "require": {
         "php": "^7.4|^8.0",
         "backpack/crud": "^4.1",
-        "capeandbay-devs/nautical-integrator": "dev-master",
+        "capeandbay-devs/nautical-integrator": "master",
         "consoletvs/charts": "^7.1",
         "fideloper/proxy": "^4.4",
         "firebase/php-jwt": "^5.4",
@@ -85,8 +85,8 @@
     "prefer-stable": true,
     "repositories": [
         {
-            "type": "path",
-            "url": "packages/capeandbay-devs/nautical-integrator"
+            "type": "vcs",
+            "url": "https://bitbucket.org/capeandbaytrufit/anchor-nautical.git"
         }
     ]
 }
