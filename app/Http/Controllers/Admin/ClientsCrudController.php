@@ -54,10 +54,11 @@ class ClientsCrudController extends CrudController
         ];
 
         $column_defs = [$name, $active];
-        $this->crud->addColumns($column_defs);
+        CRUD::addColumns($column_defs);
 
-        $edit_create_defs = [$name, $active_edit];
-        $this->crud->addFields($edit_create_defs, 'both');
+        //$edit_create_defs = [$name, $active_edit];
+        //CRUD::addFields($edit_create_defs, 'both');
+
     }
 
     protected function setupCreateOperation()
@@ -88,6 +89,7 @@ class ClientsCrudController extends CrudController
             'label' => 'Main Website URL',
             'value' => (!is_null($website1_record)) ? $website1_record->value : ''
         ]);
+
 
         $umbrella_record = $client->uses_umbrella_corp()->first();
         $this->crud->addField([

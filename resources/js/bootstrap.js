@@ -6,20 +6,19 @@ window._ = require('lodash');
  * code may be modified to fit the specific needs of your application.
  */
 try {
+    //window.$ = window.jQuery = require('jquery');
+    //window.Noty = require('noty');
+    //require('bootstrap');
+    window.select2 = require ('select2');
     window.Popper = require('popper.js').default;
-    window.$ = window.jQuery = require('jquery');
-    window.Noty = require('noty');
+    /*
 
-    require('bootstrap');
+
     require('bootstrap-iconpicker/bootstrap-iconpicker/js/bootstrap-iconpicker');
     require('jquery-loadingModal/js/jquery.loadingModal.min');
 
-    $.DataTable = require( 'datatables.net' )( window, $ );
-    require( 'datatables.net-bs4' )( window, $ );
-    require( 'datatables.net-responsive' )( window, $ );
-    require( 'datatables.net-responsive-bs4' )( window, $ );
-    require( 'datatables.net-fixedheader' )( window,$ );
-    require( 'datatables.net-fixedheader-bs4' )( window, $ );
+
+ */
 } catch (e) {}
 
 window.axios = require('axios');
@@ -31,8 +30,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  * for events that are broadcast by Laravel. Echo and event broadcasting
  * allows your team to easily build robust real-time web applications.
  */
-window.select2 = require ('select2');
-window.noty = require('noty');
+
 window.Vapor = require('laravel-vapor');
 // import Echo from 'laravel-echo';
 
