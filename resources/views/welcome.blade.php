@@ -132,7 +132,7 @@
 <div class="flex-center position-ref full-height" id="app">
     <welcome
         show-forgot-password="{!! '1' !!}"
-        :show-registration="{{ (config('backpack.base.registration_open')) ?? false }}"
+        :show-registration="{{ config('backpack.base.registration_open') ? config('backpack.base.registration_open') : 'false' }}"
         forgot-password-url="{!! route('backpack.auth.password.reset') !!}"
         registration-url="{{ route('backpack.auth.register') }}"
         login-url="{{ route('backpack.auth.login') }}"

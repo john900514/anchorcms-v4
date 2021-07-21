@@ -26,6 +26,7 @@
         "laravel/vapor-ui": "^1.0",
         "league/flysystem-aws-s3-v3": "~1.0",
         "lorisleiva/laravel-actions": "^2.1",
+        "predis/predis": "^1.1",
         "ramsey/uuid": "^4.1",
         "silber/bouncer": "v1.0.0-rc.10",
         "spatie/laravel-activitylog": "^4.0",

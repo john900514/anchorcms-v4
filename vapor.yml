@@ -1,0 +1,46 @@
+id: 22896
+name: anchor-cms-v4
+environments:
+    production:
+        runtime: docker
+        memory: 1024
+        cli-memory: 512
+        database: anchor-cms
+        cache: anchor-cms-cache
+        timeout: 120
+        queue-concurrency: 5
+        queues:
+            - production-anchor-events
+        build:
+            - 'COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev'
+            - 'php artisan event:cache'
+            - 'npm ci && npm run dev && rm -rf node_modules'
+    staging:
+        domain: anchor4dev.capeandbay.com
+        runtime: docker
+        memory: 1024
+        cli-memory: 512
+        database: anchor-dev-stage
+        cache: anchor-cms-cache
+        timeout: 120
+        queue-concurrency: 50
+        queues:
+            - staging-anchor-events
+        build:
+            - 'COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev'
+            - 'php artisan event:cache'
+            - 'npm ci && npm run dev && rm -rf node_modules'
+    develop:
+        runtime: docker
+        memory: 1024
+        cli-memory: 512
+        database: anchor-dev-stage
+        cache: anchor-cms-cache
+        timeout: 120
+        queue-concurrency: 50
+        queues:
+            - develop-anchor-events
+        build:
+            - 'COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev'
+            - 'php artisan event:cache'
+            - 'npm ci && npm run dev && rm -rf node_modules'
