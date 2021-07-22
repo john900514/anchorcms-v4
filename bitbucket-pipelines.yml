@@ -2,33 +2,84 @@
 # Use a skeleton to build, test and deploy using manual and parallel steps
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
-image: atlassian/default-image:2
+image: lorisleiva/laravel-docker:8.0
 
 pipelines:
-  default:
-    - parallel:
+  branches:
+    master:
       - step:
-          name: 'Build and Test'
+          name: (Pretend) Unit Testing
+          caches:
+            - composer
+            - cposer
+            - node
           script:
-            - echo "Your build and test goes here..."
+            - composer config bitbucket-oauth.bitbucket.org $BITBUCKET_CLIENT $BITBUCKET_SECRET
+            - composer config -g github-oauth.github.com 235902933cf6ad227b534e7bf60decae368f8ea8
+            - composer install --no-interaction --prefer-dist  --optimize-autoloader --no-dev
+            - php artisan config:clear
+            - php artisan event-sourcing:clear-event-handlers
       - step:
-          name: 'Lint'
+          name: Deploy to Production
+          caches:
+            - composer
+            - cposer
+            - node
+            - vapor
+          deployment: production
+          trigger: manual
           script:
-            - echo "Your linting goes here..."
+            - composer config bitbucket-oauth.bitbucket.org $BITBUCKET_CLIENT $BITBUCKET_SECRET
+            - composer config -g github-oauth.github.com 235902933cf6ad227b534e7bf60decae368f8ea8
+            - ln -f -s .env.example .env
+            - composer install --no-interaction --prefer-dist  --optimize-autoloader --no-dev
+            - npm install && npm run prod
+            - php artisan config:clear
+            - php artisan event-sourcing:clear-event-handlers
+            - vendor/bin/vapor deploy production
+    staging:
       - step:
-          name: 'Security scan'
+          name: Deploy To Staging
+          caches:
+            - composer
+            - cposer
+            - node
+            - vapor
+            - docker
+          deployment: staging
           script:
-            - echo "Your security scan goes here..."
+            - composer config bitbucket-oauth.bitbucket.org $BITBUCKET_CLIENT $BITBUCKET_SECRET
+            - composer config -g github-oauth.github.com 235902933cf6ad227b534e7bf60decae368f8ea8
+            - composer install --no-interaction --prefer-dist  --optimize-autoloader
+            - npm install && npm run dev
+            - php artisan config:clear
+            - vendor/bin/vapor deploy staging
+          services:
+            - docker
+    develop:
+      - step:
+          name: Deploy To develop
+          caches:
+            - composer
+            - cposer
+            - node
+            - vapor
+            - docker
+          deployment: testing
+          script:
+            - composer config bitbucket-oauth.bitbucket.org $BITBUCKET_CLIENT $BITBUCKET_SECRET
+            - composer config -g github-oauth.github.com 235902933cf6ad227b534e7bf60decae368f8ea8
+            - composer install --no-interaction --prefer-dist  --optimize-autoloader
+            - npm install && npm run dev
+            - php artisan config:clear
+            - vendor/bin/vapor deploy develop
+          services:
+            - docker
+definitions:
+  services:
+    docker:
+      memory: 1024
+  caches:
+    vapor: .vapor
+    cposer: vendor
 
-    # The following deployment steps will be executed for each pipeline run. To configure your steps and conditionally deploy see https://support.atlassian.com/bitbucket-cloud/docs/configure-bitbucket-pipelinesyml/
-    - step:
-        name: 'Deployment to Staging'
-        deployment: staging
-        script:
-          - echo "Your deployment to staging script goes here..."
-    - step:
-        name: 'Deployment to Production'
-        deployment: production
-        trigger: 'manual'
-        script:
-          - echo "Your deployment to production script goes here..."
