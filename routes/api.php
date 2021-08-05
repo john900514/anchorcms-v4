@@ -20,7 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group([
     'middleware' => 'api',
-    'namespace'  => 'App\Http\Controllers\API',
+    'namespace'  => 'App\Http\Controllers',
     ],
     function () { // custom api routes
 
@@ -28,9 +28,26 @@ Route::group([
         Route::post('logout', 'AuthController@logout');
         Route::post('refresh', 'AuthController@refresh');
         Route::post('me', 'AuthController@me');
+    });
 
+Route::group([
+    'middleware' => 'api',
+    'namespace'  => 'App\Http\Controllers\API',
+],
+    function () { // custom api routes
         Route::group(['prefix' => 'integrations'], function() {
             Route::get('/', 'Integrations\SSOIntegrationsAPIController@index');
             Route::get('/{integration_id}', 'Integrations\SSOIntegrationsAPIController@show');
         });
+    });
+
+Route::group([
+    'middleware' => 'auth:api',
+    'namespace'  => 'App\Actions',
+],
+    function () { // custom api routes
+        Route::group(['prefix' => 'vault'], function() {
+            Route::post('/entry', 'Auth\SecretVault\ValidatePassword');
+        });
+
     });

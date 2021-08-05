@@ -48,7 +48,7 @@
 
                             <div class="form-group">
                                 <div>
-                                    <button type="submit" class="btn btn-block btn-primary">
+                                    <button type="submit" class="btn btn-block btn-chartreuse">
                                         Login
                                     </button>
                                 </div>
@@ -57,9 +57,9 @@
                     </div>
                 </div>
 
-                <div class="text-center" v-if="showForgotPassword"><a :href="forgotPasswordUrl">Forgot Your Password?</a></div>
+                <div class="text-center" v-if="showForgotPassword"><a class="text-chartreuse" :href="forgotPasswordUrl">Forgot Your Password?</a></div>
                 <div class="text-center" v-if="showRegistration">
-                    <a :href="registrationUrl">Register</a>
+                    <a class="text-chartreuse" :href="registrationUrl">Register</a>
                 </div>
             </div>
         </div>

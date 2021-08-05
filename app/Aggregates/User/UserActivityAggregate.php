@@ -8,6 +8,8 @@ use App\StorableEvents\User\History\EmailHasBeenVerified;
 use App\StorableEvents\User\History\EmailUpdated;
 use App\StorableEvents\User\History\PasswordUpdated;
 use App\StorableEvents\User\History\TimezoneUpdated;
+use App\StorableEvents\User\History\UserAssignCapeAndBayDepartment;
+use App\StorableEvents\User\History\UserAssignedClientLocation;
 use App\StorableEvents\User\History\UsernameUpdated;
 use Spatie\EventSourcing\AggregateRoots\AggregateRoot;
 use App\StorableEvents\User\History\HistoryHasBeenEstablished;
@@ -18,6 +20,7 @@ class UserActivityAggregate extends AggregateRoot
     protected $date_created, $created_by_user_id;
     protected $history = [];
     protected $verified = false;
+    protected $department_location, $assigned_client;
 
     protected static bool $allowConcurrency = true;
 
@@ -133,6 +136,16 @@ class UserActivityAggregate extends AggregateRoot
         $this->history[] = $history;
     }
 
+    public function applyUserAssignCapeAndBayDepartment(UserAssignCapeAndBayDepartment $event)
+    {
+        $this->department_location = $event->dept;
+    }
+
+    public function applyUserAssignedClientLocation(UserAssignedClientLocation $event)
+    {
+        $this->department_location = $event->location;
+    }
+
     /**
      * @param array $user
      * @param string $creator_id
@@ -174,6 +187,18 @@ class UserActivityAggregate extends AggregateRoot
     public function setAdminRole(string $id, string $role, string $date, string $modifier_id)
     {
         $this->recordThat(new UserAssignedCapeAndBayRole($id, $role,$date, $modifier_id));
+        return $this;
+    }
+
+    public function setAdminDepartment(string $id, string $dept, string $date, string $modifier_id)
+    {
+        $this->recordThat(new UserAssignCapeAndBayDepartment($id, $dept,$date, $modifier_id));
+        return $this;
+    }
+
+    public function setClientLocation(string $id, string $location, string $date, string $modifier_id)
+    {
+        $this->recordThat(new UserAssignedClientLocation($id, $location,$date, $modifier_id));
         return $this;
     }
 
@@ -254,5 +279,10 @@ class UserActivityAggregate extends AggregateRoot
         }
 
         return $results;
+    }
+
+    public function getDepartmentLocation()
+    {
+        return $this->department_location;
     }
 }

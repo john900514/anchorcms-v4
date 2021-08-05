@@ -6,6 +6,7 @@ use App\Aggregates\User\UserActivityAggregate;
 use App\Exceptions\User\UserActivityException;
 use App\Http\Requests\UserRequest;
 use App\Models\AccessControl\Roles;
+use App\Models\Clients\Client;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Silber\Bouncer\BouncerFacade as Bouncer;
@@ -158,6 +159,7 @@ class UserCrudController extends CrudController
                     //DB::raw('users.id AND assigned_roles.roles_id NOT IN (1)'));
                     DB::raw('users.id AND assigned_roles.role_id NOT IN (1)'));
 
+                $this->crud->addClause('where', 'users.id', '<>', backpack_user()->id);
                 CRUD::removeButton('update');
                 CRUD::removeButton('delete');
                 CRUD::addButtonFromView('line', 'admin-update', 'users.can-admin-edit', 'beginning');
@@ -225,12 +227,15 @@ class UserCrudController extends CrudController
             ];
 
             $role_options = Roles::getCRUDRoles();
+            $client_options = Client::getCRUDClients();
             $required = ['required' => 'required'];
 
             $this->crud->addField(['name' => 'name', 'type' => 'text', 'label' => 'Name', 'wrapper' => $col_md_6, 'attributes' => $required]);
             $this->crud->addField(['name' => 'email', 'type' => 'email', 'label' => 'Email', 'wrapper' => $col_md_6, 'attributes' => $required]);
             $this->crud->addField(['name' => 'details[timezone]', 'type' => 'select_from_array', 'label' => 'Timezone', 'options' => $tz_options, 'wrapper' => $col_md_6, 'attributes' => $required]);
-            $this->crud->addField(['name' => 'role', 'type' => 'select_from_array', 'label' => 'Role', 'options' => $role_options, 'wrapper' => $col_md_6, 'attributes' => $required]);
+            $this->crud->addField(['name' => 'role', 'type' => 'users.select_from_array_roles', 'label' => 'Role', 'options' => $role_options, 'wrapper' => $col_md_6, 'attributes' => $required]);
+            $this->crud->addField(['name' => 'details[client]',  'type' => 'users.select_from_array_clients', 'label' => 'Client', 'options' => $client_options, 'wrapper' => $col_md_6, 'attributes' => $required]);
+            $this->crud->addField(['name' => 'details[location]', 'type' => 'users.select_from_array_dept_location', 'label' => 'Department/Location', 'wrapper' => $col_md_6, 'attributes' => $required]);
         }
     }
 
@@ -259,15 +264,18 @@ class UserCrudController extends CrudController
                 ->setTimezone($data['details']['timezone'], '', $save_time, backpack_user()->id);
         }
 
-
         // roles!
         $role = $data['role'];
         switch($role)
         {
             case 'developer':
+                $aggy = $aggy->setAdminRole($entry->id, $role, $save_time, backpack_user()->id);
+            break;
+
             case 'admin':
             case 'ad-ops':
-                $aggy = $aggy->setAdminRole($entry->id, $role, $save_time, backpack_user()->id);
+                $aggy = $aggy->setAdminRole($entry->id, $role, $save_time, backpack_user()->id)
+                    ->setAdminDepartment($entry->id, $data['details']['location'],$save_time, backpack_user()->id);
                 break;
 
             default:
@@ -305,6 +313,7 @@ class UserCrudController extends CrudController
             ];
 
             $role_options = Roles::getCRUDRoles();
+            $client_options = Client::getCRUDClients();
             $required = ['required' => 'required'];
 
             $this->crud->addField(['name' => 'name', 'type' => 'text', 'label' => 'Name', 'wrapper' => $col_md_6, 'attributes' => $required]);
@@ -316,17 +325,25 @@ class UserCrudController extends CrudController
 
             $user_role_array = $entry->getRoles();
             $selected_role = (count($user_role_array) > 0) ? $user_role_array[0] : '';
+
             if(backpack_user()->id != $entry->id)
             {
                 // @todo - make sure the user is a dev an admin or has the allowedToChangeRolesAbility
-                $this->crud->addField(['name' => 'role', 'type' => 'select_from_array', 'label' => 'Role', 'options' => $role_options, 'wrapper' => $col_md_6, 'attributes' => $required, 'value' => $selected_role]);
+                $this->crud->addField(['name' => 'role', 'type' => 'users.select_from_array_roles', 'label' => 'Role', 'options' => $role_options, 'wrapper' => $col_md_6, 'attributes' => $required, 'value' => $selected_role]);
+                $this->crud->addField(['name' => 'details[client]',  'type' => 'users.select_from_array_clients', 'label' => 'Client', 'options' => $client_options, 'wrapper' => $col_md_6, 'attributes' => $required, 'value' => '']);
+                $this->crud->addField(['name' => 'details[location]', 'type' => 'users.select_from_array_dept_location', 'label' => 'Department/Location', 'wrapper' => $col_md_6, 'attributes' => $required, 'value' => $users_aggy->getDepartmentLocation()]);
             }
             else
             {
                 $attrs = $required;
                 $attrs['disabled'] = 'disabled';
-                $this->crud->addField(['name' => 'role', 'type' => 'select_from_array', 'label' => 'Role', 'options' => $role_options, 'wrapper' => $col_md_6, 'attributes' => $attrs, 'value' => $selected_role, 'hint' => 'You can\'t change your own role.']);
+                $this->crud->addField(['name' => 'role', 'type' => 'users.select_from_array_roles', 'label' => 'Role', 'options' => $role_options, 'wrapper' => $col_md_6, 'attributes' => $attrs, 'value' => $selected_role, 'hint' => 'You can\'t change your own role.']);
+                $this->crud->addField(['name' => 'details[client]',  'type' => 'users.select_from_array_clients', 'label' => 'Client', 'options' => $client_options, 'wrapper' => $col_md_6, 'attributes' => $attrs, 'value' => '']);
+                $this->crud->addField(['name' => 'details[location]', 'type' => 'users.select_from_array_dept_location', 'label' => 'Department/Location', 'wrapper' => $col_md_6, 'attributes' => $attrs, 'value' => $users_aggy->getDepartmentLocation()]);
             }
+
+            // @todo - get the user's department if their role is not developer
+            //$this->crud->addField(['name' => 'details[location]', 'type' => 'users.select_from_array_dept_location', 'label' => 'Department/Location', 'wrapper' => $col_md_6, 'attributes' => $required, 'value' => $selected_role]);
 
 
             $verified = [
@@ -388,35 +405,21 @@ class UserCrudController extends CrudController
         {
             // @todo - make sure the user is a dev an admin or has the allowedToChangeRolesAbility
             $role = $data['role'];
-            /*
-         if(this user is not the user being updated)
-        {
-            if(the user is not a dev or an admin && the user cannot change user role)
+            switch($role)
             {
-                // Alert the user they can't change their this user's role
-            }
-            else
-            {
-                switch($role)
-                {
-                    case 'developer':
-                    case 'admin':
-                    case 'ad-ops':
-                        $aggy = $aggy->setAdminRole($entry->id, $role);
-                        break;
+                case 'developer':
+                    $aggy = $aggy->setAdminRole($entry->id, $role, $save_time, backpack_user()->id);
+                    break;
 
-                    default:
-                        $aggy = $aggy->setClientRole($entry->id, $role);
-                }
+                case 'admin':
+                case 'ad-ops':
+                    $aggy = $aggy->setAdminRole($entry->id, $role, $save_time, backpack_user()->id)
+                        ->setAdminDepartment($entry->id, $data['details']['location'],$save_time, backpack_user()->id);
+                    break;
+
+                default:
+                    //$aggy = $aggy->setClientRole($entry->id, $role, $save_time, backpack_user()->id);
             }
-        }
-        else
-        {
-            // if the new role != old role
-            // Alert the user they can't change their own role
-            // otherwise, keep your trap shut
-        }
-         */
         }
 
 

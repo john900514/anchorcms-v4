@@ -38,7 +38,7 @@
                 ></post-request-button>
             @else
                 <a class="nav-link" @if(!is_null($nav_option->route))href="{!! url($nav_option->route) !!}"@endif>
-                    @if(!is_null($nav_option->icon))<i class="{!! $nav_option->icon !!}"></i>@endif{!!  $nav_option->name !!}
+                    @if(!is_null($nav_option->icon))<i class="{!! $nav_option->icon !!}"></i>@endif {!! $nav_option->name !!}
                     @if(strtotime($nav_option->created_at) > strtotime('now -3DAY'))<span class="badge badge-primary"> NEW! </span>@endif
                 </a>
             @endif

@@ -24,34 +24,34 @@ class Roles extends Role
             $role_options = [
                 'developer' => 'Developer',
                 'admin' => 'Cape & Bay Admin',
-                'ad-ops' => 'Cape & Bay Ad-Ops',
-                'executive' => 'TruFit Executive',
-                'gm' => 'TruFit Club General Manager',
-                'trufit-rep' => 'TruFit Employee Rep',
+                //'ad-ops' => 'Cape & Bay Ad-Ops',
+                //'executive' => 'Client Executive/Owner',
+                //'leader' => 'Client Manager/Leader',
+                //'rep' => 'Client Employee/Rep',
             ];
         }
         elseif(Bouncer::is(backpack_user())->an('admin'))
         {
             $role_options = [
                 'admin' => 'Cape & Bay Admin',
-                'ad-ops' => 'Cape & Bay Ad-Ops',
-                'executive' => 'TruFit Executive',
-                'gm' => 'TruFit Club General Manager',
-                'trufit-rep' => 'TruFit Employee Rep',
+                //'ad-ops' => 'Cape & Bay Ad-Ops',
+                //'executive' => 'Client Executive/Owner',
+                //'leader' => 'Client Manager/Leader',
+                //'rep' => 'Client Employee/Rep',
             ];
         }
         elseif(Bouncer::is(backpack_user())->an('executive'))
         {
             $role_options = [
-                'executive' => 'TruFit Executive',
-                'gm' => 'TruFit Club General Manager',
-                'trufit-rep' => 'TruFit Employee Rep',
+                //'executive' => 'Client Executive/Owner',
+                //'leader' => 'Client Manager/Leader',
+                //'rep' => 'Client Employee/Rep',
             ];
         }
         else
         {
             $role_options = [
-                'trufit-rep' => 'TruFit Employee Rep',
+                //'rep' => 'Client Employee/Rep',
             ];
         }
 

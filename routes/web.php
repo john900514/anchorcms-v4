@@ -33,3 +33,10 @@ Route::group([
     Route::post('/', 'UserRegistrationController@complete_registration');
 });
 
+Route::group([
+    'prefix' => 'internal-api',
+    'namespace'  => 'App\Http\Controllers\API',
+], function () {
+    Route::resource('locations', 'Locations\LocationDepartmentsAPIController')->only(['show']);
+});
+

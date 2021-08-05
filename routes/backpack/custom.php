@@ -19,6 +19,12 @@ Route::group([
         Route::post('edit-account-info', 'User\UserAccountController@postAccountInfoForm')->name('backpack.account.info.store');
         Route::post('change-password', 'User\UserAccountController@postChangePasswordForm')->name('backpack.account.password');
         Route::post('change-sentry', 'User\UserAccountController@postChangeSentryForm')->name('backpack.account.sentry');
+
+        Route::group(['prefix' => 'vault'], function() {
+            Route::get('/', 'CMS\SecretsVault\VaultAccessController@index')->name('secret-vault');
+            Route::get('/entry', function() { \Alert::warning('Ooops! Refreshing the page brings you back to the beginning. Your session was probably lost. Try to avoid refreshing while in the vault!')->flash(); return redirect()->route('secret-vault'); });
+            Route::get('/vaults', 'CMS\SecretsVault\VaultAccessController@vault_list')->name('list-of-vaults');
+        });
     }
 });
 

@@ -1,3 +1,16 @@
+.btn-chartreuse, .btn-shartroose, .btn-shart {
+  color: #000;
+  background-color: rgba(223,242,0,0.85);
+  border-color: #000;/*rgba(223,242,0,0.85)*/;
+}
+
+.text-chartreuse, .text-shartroose, .text-shart {
+  color: rgba(223,242,0,0.85);
+}
+
+.bg-chartreuse, .bg-shartroose, .bg-shart {
+  background-color: rgba(223,242,0,0.85);
+}
 /*
 @import "~noty/src/noty.scss";
 @import "~noty/src/themes/mint.scss";

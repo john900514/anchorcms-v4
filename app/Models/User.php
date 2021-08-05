@@ -56,6 +56,11 @@ class User extends RedfieldUser
         return $this->detail()->whereDetail('sentry_auth_token');
     }
 
+    public function vault_auth_token()
+    {
+        return $this->detail()->whereDetail('1password-token');
+    }
+
     public function timezone()
     {
         return $this->hasOne('App\Models\UserDetails', 'user_id', 'id')

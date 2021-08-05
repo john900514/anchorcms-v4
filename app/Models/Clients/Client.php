@@ -25,6 +25,23 @@ class Client extends Model
         'active',
     ];
 
+    public static function getCRUDClients()
+    {
+        $results = [];
+
+        $client_records = self::whereActive(true)->get();
+
+        if(count($client_records))
+        {
+            foreach ($client_records as $client_record)
+            {
+                $results[$client_record->id] = $client_record->name;
+            }
+        }
+
+        return $results;
+    }
+
     public function details()
     {
         return $this->hasMany('App\Models\Clients\ClientDetail', 'client_id', 'id');

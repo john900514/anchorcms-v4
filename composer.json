@@ -32,7 +32,8 @@
         "spatie/laravel-activitylog": "^4.0",
         "spatie/laravel-event-sourcing": "^4.10",
         "twilio/sdk": "^6.24",
-        "tymon/jwt-auth": "^1.0.2"
+        "tymon/jwt-auth": "^1.0.2",
+        "capeandbay-devs/vault-access": "dev-master"
     },
     "require-dev": {
         "backpack/generators": "^3.1",
@@ -88,6 +89,10 @@
         {
             "type": "vcs",
             "url": "https://bitbucket.org/capeandbaytrufit/anchor-nautical.git"
+        },
+        {
+            "type": "path",
+            "url": "packages/capeandbay-devs/vault-access"
         }
     ]
 }

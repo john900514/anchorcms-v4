@@ -2,12 +2,15 @@
 
 namespace App\Projectors\User;
 
+use App\Models\Clients\LocationDepartment;
 use App\Models\User;
 use App\Models\UserDetails;
 use App\StorableEvents\User\History\EmailUpdated;
 use App\StorableEvents\User\History\HistoryHasBeenEstablished;
 use App\StorableEvents\User\History\TimezoneUpdated;
+use App\StorableEvents\User\History\UserAssignCapeAndBayDepartment;
 use App\StorableEvents\User\History\UserAssignedCapeAndBayRole;
+use App\StorableEvents\User\History\UserAssignedClientLocation;
 use App\StorableEvents\User\History\UsernameUpdated;
 use Silber\Bouncer\BouncerFacade as Bouncer;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
@@ -183,6 +186,133 @@ class UserHistoryProjector extends Projector
         }
     }
 
+    public function onUserAssignCapeAndBayDepartment(UserAssignCapeAndBayDepartment $event)
+    {
+        $user = User::find($event->id);
+
+        switch($event->dept)
+        {
+            case 'executive':
+                Bouncer::allow($user)->toManage(LocationDepartment::class);
+                break;
+
+            case 'creative':
+            case 'ad-ops':
+            case 'dev':
+                $dept_record = LocationDepartment::whereSlug($event->dept)->first();
+                if(!is_null($dept_record))
+                {
+                    Bouncer::allow($user)->toManage($dept_record);
+                }
+        }
+
+        $modifier = User::find($event->modifier);
+
+        $detail = UserDetails::firstOrCreate([
+            'user_id' => $event->id,
+            'detail' => 'location-department',
+            'value' => $event->dept,
+        ]);
+
+        if(!is_null($modifier))
+        {
+            $detail->misc = [
+                'date' => $event->date,
+                'old_location_department' => 'Unknown',
+                'message' => 'User Assigned Location or Dept was updated to '.$event->dept.' on ' . $event->date . ' by ' . $modifier->name
+            ];
+        }
+        else
+        {
+            $detail->misc = [
+                'date' => $event->date,
+                'old_location_department' => $event->old,
+                'message' => 'User Assigned Location or Dept was updated to '.$event->dept.' on ' . $event->date . ' by the Matrix'
+            ];
+        }
+
+        $detail->active = true;
+        $detail->save();
+
+        $records_to_deactivate = UserDetails::whereUserId($event->id)
+            ->whereDetail('location-department')
+            ->whereActive(true)
+            ->where('id', '!=', $detail->id)
+            ->get();
+
+        if(count($records_to_deactivate) > 0)
+        {
+            foreach($records_to_deactivate as $record)
+            {
+                $record->active = false;
+                $record->save();
+
+                /*
+                 * @todo - undo and modify to make sure a user doesn't lose an ability it was just granted from a deactivated record
+                $loc_record = LocationDepartment::whereSlug($record->value)->first();
+                if(!is_null($loc_record))
+                {
+                    Bouncer::disallow($user)->toManage($loc_record);
+                }
+                */
+            }
+        }
+    }
+
+    public function onUserAssignedClientLocation(UserAssignedClientLocation $event)
+    {
+        $user = User::find($event->id);
+
+        $loc_record = LocationDepartment::whereSlug($event->location)->first();
+        if(!is_null($loc_record))
+        {
+            Bouncer::allow($user)->toManage($loc_record);
+        }
+
+        $modifier = User::find($event->modifier);
+
+        $detail = UserDetails::firstOrCreate([
+            'user_id' => $event->id,
+            'detail' => 'location-department',
+            'value' => $event->location,
+        ]);
+
+        if(!is_null($modifier))
+        {
+            $detail->misc = [
+                'date' => $event->date,
+                'old_location_department' => 'Unknown',
+                'message' => 'User Assigned Location or Dept was updated to '.$event->location.' on ' . $event->date . ' by ' . $modifier->name
+            ];
+        }
+        else
+        {
+            $detail->misc = [
+                'date' => $event->date,
+                'old_location_department' => $event->old,
+                'message' => 'User Assigned Location or Dept was updated to '.$event->location.' on ' . $event->date . ' by the Matrix'
+            ];
+        }
+
+        $detail->active = true;
+        $detail->save();
+
+        $records_to_deactivate = UserDetails::whereUserId($event->id)
+            ->whereDetail('location-department')
+            ->whereActive(true)
+            ->where('id', '!=', $detail->id)
+            ->get();
+
+        if(count($records_to_deactivate) > 0)
+        {
+            foreach($records_to_deactivate as $record)
+            {
+                $record->active = false;
+                $record->save();
+            }
+        }
+    }
+
     public function onUserAssignedCapeAndBayRole(UserAssignedCapeAndBayRole $event)
     {
         $user = User::find($event->id);
@@ -209,7 +339,7 @@ class UserHistoryProjector extends Projector
             $detail->misc = [
                 'date' => $event->date,
                 'old_value' => $event->old,
-                'message' => 'Timezone was updated to '.$event->role.' on ' . $event->date . ' by the Matrix'
+                'message' => 'User Role was updated to '.$event->role.' on ' . $event->date . ' by the Matrix'
             ];
         }
 

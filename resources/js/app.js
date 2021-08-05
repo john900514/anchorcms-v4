@@ -19,6 +19,10 @@ Vue.component('video-bg', require('./vue-components/components/AnimatedBackgroun
 Vue.component('launch-a-modal-button', require('./vue-components/components/LaunchASweetModalButton').default);
 Vue.component('post-request-button', require('./vue-components/components/PostRequestButton').default);
 
+Vue.component('user-roles-select', require('./vue-components/components/usersCrud/UserRolesSelectComponent').default);
+Vue.component('user-client-select', require('./vue-components/components/usersCrud/UserClientSelectComponent').default);
+Vue.component('location-dept-select', require('./vue-components/components/usersCrud/LocationDeptSelectComponent').default);
+
 
 import VuexStore from './vuex-store/store';
 window.store = VuexStore;
