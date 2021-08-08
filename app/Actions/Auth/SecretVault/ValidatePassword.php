@@ -65,7 +65,8 @@ class ValidatePassword
         }
         else
         {
-            if(is_null($validated = Cache::get($user->id.'-vault-access')))
+            $user = is_null($user) ? backpack_user() : $user;
+            if((is_null($validated = Cache::get($user->id.'-vault-access'))))
             {
                 $results['reason'] = 'missing_password';
                 Cache::forget($user->id.'-vault-access');

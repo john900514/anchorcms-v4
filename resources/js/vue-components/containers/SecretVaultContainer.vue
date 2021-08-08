@@ -9,7 +9,7 @@
 
 <script>
 import { mapMutations } from 'vuex';
-import VaultScreen from "../screens/SecretVault/SecretVaultScreen";
+import VaultScreen from "../screens/SecretVault/SecretVaultScreen.vue";
 
 export default {
     name: "SecretVaultContainer",

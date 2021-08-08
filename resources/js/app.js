@@ -1,5 +1,5 @@
 require('./bootstrap');
-const Vue = require('vue');
+const Vue = require('vue').default;
 window.Vue = Vue;
 import Vuex from 'vuex';
 Vue.use(Vuex);
@@ -14,14 +14,14 @@ Vue.use(SweetModal)
  *
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
-Vue.component('welcome', require('./vue-components/containers/WelcomeContainer').default);
-Vue.component('video-bg', require('./vue-components/components/AnimatedBackgroundComponent').default);
-Vue.component('launch-a-modal-button', require('./vue-components/components/LaunchASweetModalButton').default);
-Vue.component('post-request-button', require('./vue-components/components/PostRequestButton').default);
+Vue.component('welcome', require('./vue-components/containers/WelcomeContainer.vue').default);
+Vue.component('video-bg', require('./vue-components/components/AnimatedBackgroundComponent.vue').default);
+Vue.component('launch-a-modal-button', require('./vue-components/components/LaunchASweetModalButton.vue').default);
+Vue.component('post-request-button', require('./vue-components/components/PostRequestButton.vue').default);
 
-Vue.component('user-roles-select', require('./vue-components/components/usersCrud/UserRolesSelectComponent').default);
-Vue.component('user-client-select', require('./vue-components/components/usersCrud/UserClientSelectComponent').default);
-Vue.component('location-dept-select', require('./vue-components/components/usersCrud/LocationDeptSelectComponent').default);
+Vue.component('user-roles-select', require('./vue-components/components/usersCrud/UserRolesSelectComponent.vue').default);
+Vue.component('user-client-select', require('./vue-components/components/usersCrud/UserClientSelectComponent.vue').default);
+Vue.component('location-dept-select', require('./vue-components/components/usersCrud/LocationDeptSelectComponent.vue').default);
 
 
 import VuexStore from './vuex-store/store';

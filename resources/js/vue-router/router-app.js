@@ -1,6 +1,7 @@
 require('../bootstrap');
-const Vue = require('vue');
+const Vue = require('vue').default;
 window.Vue = Vue;
+
 import VueRouter from "vue-router";
 import Vuex from 'vuex';
 Vue.use(Vuex);
@@ -14,8 +15,8 @@ window.store = VuexStore;
 
 import router from "./";
 import { mapActions } from 'vuex';
-Vue.component('post-request-button', require('../vue-components/components/PostRequestButton').default);
-Vue.component('secret-vault', require('../vue-components/containers/SecretVaultContainer').default);
+Vue.component('post-request-button', require('../vue-components/components/PostRequestButton.vue').default);
+Vue.component('secret-vault', require('../vue-components/containers/SecretVaultContainer.vue').default);
 
 new Vue({
     el: '#app',

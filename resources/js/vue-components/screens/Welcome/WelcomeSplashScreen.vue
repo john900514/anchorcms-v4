@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import LoginScreen from "../../components/LoginModal";
+import LoginScreen from "../../components/LoginModal.vue";
 
 export default {
     name: "WelcomeSplashScreen",

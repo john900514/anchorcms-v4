@@ -5,6 +5,8 @@
 // --------------------------
 // This route file is loaded automatically by Backpack\Base.
 // Routes you generate using Backpack\Generators will be placed here.
+use Illuminate\Support\Facades\Cache;
+
 Route::group([
     'prefix'     => config('backpack.base.route_prefix', 'admin'),
     'middleware' => array_merge(
@@ -24,6 +26,8 @@ Route::group([
             Route::get('/', 'CMS\SecretsVault\VaultAccessController@index')->name('secret-vault');
             Route::get('/entry', function() { \Alert::warning('Ooops! Refreshing the page brings you back to the beginning. Your session was probably lost. Try to avoid refreshing while in the vault!')->flash(); return redirect()->route('secret-vault'); });
             Route::get('/vaults', 'CMS\SecretsVault\VaultAccessController@vault_list')->name('list-of-vaults');
+            Route::get('/items', function() { \Alert::warning('Ooops! Refreshing the page brings you back to the beginning. Your session was probably lost. Try to avoid refreshing while in the vault!')->flash(); return redirect()->route('secret-vault'); })->name('vault-items');
+            Route::post('/lockout', function() { Cache::forget(backpack_user()->id.'-vault-access'); return response(['success' => true], 200); })->name('lockout');
         });
     }
 });

@@ -1,24 +1,19 @@
 const routes = [
     {
         path: '/access/vault/entry',
-        component: () => import('../vue-pages/secrets-vault/VaultIndex'),
+        component: () => import('../vue-pages/secrets-vault/VaultIndex.vue'),
         name: 'vault'
     },
     {
         path: '/access/vault/vaults',
-        component: () => import('../vue-pages/secrets-vault/ListOfVaultsPage'),
+        component: () => import('../vue-pages/secrets-vault/ListOfVaultsPage.vue'),
         name: 'vault-list'
     },
     {
         path: '/access/vault/items',
-        component: () => import('../vue-pages/secrets-vault/VaultItemsPage'),
+        component: () => import('../vue-pages/secrets-vault/VaultItemsPage.vue'),
         name: 'vault-items'
-    },
-    {
-        path: '/access/vault/item',
-        component: () => import('../vue-pages/secrets-vault/VaultItemDetailPage'),
-        name: 'vault-item'
-    },
+    }
 ];
 
 export default routes;

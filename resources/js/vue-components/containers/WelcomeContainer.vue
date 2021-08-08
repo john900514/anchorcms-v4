@@ -10,7 +10,7 @@
 </template>
 
 <script>
-    import WelcomeScreen from "../screens/Welcome/WelcomeSplashScreen";
+    import WelcomeScreen from "../screens/Welcome/WelcomeSplashScreen.vue";
 
     export default {
         name: "WelcomeContainer",

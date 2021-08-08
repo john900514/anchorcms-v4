@@ -8,7 +8,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import VaultEntry from "../../vue-components/screens/SecretVault/VaultEntryScreen";
+import VaultEntry from "../../vue-components/screens/SecretVault/VaultEntryScreen.vue";
 
 export default {
     name: "VaultIndex",

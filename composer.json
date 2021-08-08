@@ -11,6 +11,7 @@
         "php": "^7.4|^8.0",
         "backpack/crud": "^4.1",
         "capeandbay-devs/nautical-integrator": "master",
+        "capeandbay-devs/vault-access": "dev-master",
         "consoletvs/charts": "^7.1",
         "fideloper/proxy": "^4.4",
         "firebase/php-jwt": "^5.4",
@@ -32,8 +33,7 @@
         "spatie/laravel-activitylog": "^4.0",
         "spatie/laravel-event-sourcing": "^4.10",
         "twilio/sdk": "^6.24",
-        "tymon/jwt-auth": "^1.0.2",
-        "capeandbay-devs/vault-access": "dev-master"
+        "tymon/jwt-auth": "^1.0.2"
     },
     "require-dev": {
         "backpack/generators": "^3.1",
