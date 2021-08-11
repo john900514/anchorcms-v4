@@ -11,7 +11,7 @@
         "php": "^7.4|^8.0",
         "backpack/crud": "^4.1",
         "capeandbay-devs/nautical-integrator": "master",
-        "capeandbay-devs/vault-access": "dev-master",
+        "capeandbay-devs/vault-access": "^0.1",
         "consoletvs/charts": "^7.1",
         "fideloper/proxy": "^4.4",
         "firebase/php-jwt": "^5.4",
@@ -89,10 +89,6 @@
         {
             "type": "vcs",
             "url": "https://bitbucket.org/capeandbaytrufit/anchor-nautical.git"
-        },
-        {
-            "type": "path",
-            "url": "packages/capeandbay-devs/vault-access"
         }
     ]
 }
