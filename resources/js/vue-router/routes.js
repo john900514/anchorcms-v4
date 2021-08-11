@@ -1,17 +1,17 @@
 const routes = [
     {
         path: '/access/vault/entry',
-        component: () => import('../vue-pages/secrets-vault/VaultIndex.vue'),
+        component: () => import(/* webpackChunkName: "vault-index" */ '../vue-pages/secrets-vault/VaultIndex.vue'),
         name: 'vault'
     },
     {
         path: '/access/vault/vaults',
-        component: () => import('../vue-pages/secrets-vault/ListOfVaultsPage.vue'),
+        component: () => import(/* webpackChunkName: "list-of-vaults-page" */'../vue-pages/secrets-vault/ListOfVaultsPage.vue'),
         name: 'vault-list'
     },
     {
         path: '/access/vault/items',
-        component: () => import('../vue-pages/secrets-vault/VaultItemsPage.vue'),
+        component: () => import(/* webpackChunkName: "vault-items-page" */'../vue-pages/secrets-vault/VaultItemsPage.vue'),
         name: 'vault-items'
     }
 ];

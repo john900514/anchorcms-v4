@@ -1,29 +1,16 @@
 @if (config('backpack.base.scripts') && count(config('backpack.base.scripts')))
     @foreach (config('backpack.base.scripts') as $path)
-        @if($path == 'js/app.js')
-        <script type="text/javascript" src="{{ asset('js/router-app.js').'?v='.config('backpack.base.cachebusting_string') }}"></script>
+        @if (app()->environment('local'))
+            <script type="text/javascript" src="{{ asset('js/router-app.js').'?v='.config('backpack.base.cachebusting_string') }}"></script>
         @else
-        <script type="text/javascript" src="{{ asset($path).'?v='.config('backpack.base.cachebusting_string') }}"></script>
+            <script type="text/javascript" src="{{ mix('js/router-app.js').'?v='.config('backpack.base.cachebusting_string') }}"></script>
         @endif
     @endforeach
 @endif
 
 @if (config('backpack.base.mix_scripts') && count(config('backpack.base.mix_scripts')))
     @foreach (config('backpack.base.mix_scripts') as $path => $manifest)
-        @if($path == 'js/app.js')
-            @if (app()->environment('local'))
-            <script type="text/javascript" src="{{ asset('js/router-app.js').'?v='.config('backpack.base.cachebusting_string') }}"></script>
-            @else
-                <script type="text/javascript" src="{{ mix('js/router-app.js').'?v='.config('backpack.base.cachebusting_string') }}"></script>
-            @endif
-        @else
-            @if (app()->environment('local'))
-                <script type="text/javascript" src="{{ asset($path).'?v='.config('backpack.base.cachebusting_string') }}"></script>
-            @else
-                <script type="text/javascript" src="{{ mix($path).'?v='.config('backpack.base.cachebusting_string') }}"></script>
-            @endif
-
-        @endif
+    <script type="text/javascript" src="{{ mix($path, $manifest) }}"></script>
     @endforeach
 @endif
 
