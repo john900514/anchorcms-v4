@@ -12,6 +12,8 @@ use App\StorableEvents\User\History\UserAssignCapeAndBayDepartment;
 use App\StorableEvents\User\History\UserAssignedCapeAndBayRole;
 use App\StorableEvents\User\History\UserAssignedClientLocation;
 use App\StorableEvents\User\History\UsernameUpdated;
+use App\StorableEvents\User\History\VaultTokenUpdated;
+use Illuminate\Support\Facades\Cache;
 use Silber\Bouncer\BouncerFacade as Bouncer;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
@@ -359,6 +361,24 @@ class UserHistoryProjector extends Projector
                 $record->active = false;
                 $record->save();
             }
+        }
+    }
+
+    public function onVaultTokenUpdated(VaultTokenUpdated $event)
+    {
+        $detail = UserDetails::whereUserId($event->id)
+            //->whereValue($event->token)
+            ->whereDetail('1password-token')->whereActive(true)
+            ->first();
+
+        if(!is_null($detail))
+        {
+            // @todo - store this value in the cache for fast handling.
+            Cache::put($event->id.'-vault-auth-token', $detail);
+        }
+        else
+        {
+            Cache::forget($event->id.'-vault-auth-token');
         }
     }
 }

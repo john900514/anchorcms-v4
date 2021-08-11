@@ -4,8 +4,10 @@ namespace App\Reactors\User;
 
 use App\Mail\User\NewAdmin;
 use App\Models\User;
+use Silber\Bouncer\BouncerFacade as Bouncer;
 use App\StorableEvents\User\History\HistoryHasBeenEstablished;
 use App\StorableEvents\User\History\UserAssignedCapeAndBayRole;
+use App\StorableEvents\User\History\VaultTokenUpdated;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Mail;
 use Spatie\EventSourcing\EventHandlers\Reactors\Reactor;
@@ -16,5 +18,26 @@ class UserHistoryReactor extends Reactor implements ShouldQueue
     {
         $user = User::find($event->id);
         Mail::to($user->email)->send(new NewAdmin($event->id, $event->role, $event->date, $event->modifier));
+    }
+
+    public function  onVaultTokenUpdated(VaultTokenUpdated $event)
+    {
+        // Here we will use bouncer to assign the user's Role
+        $user = User::find($event->id);
+
+        if(!is_null($event->token))
+        {
+            if($user->cannot('view-secrets-vault'))
+            {
+                Bouncer::allow($user)->to('view-secrets-vault');
+            }
+        }
+        else
+        {
+            if($user->can('view-secrets-vault'))
+            {
+                Bouncer::disallow($user)->to('view-secrets-vault');
+            }
+        }
     }
 }

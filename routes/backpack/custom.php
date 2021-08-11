@@ -21,6 +21,7 @@ Route::group([
         Route::post('edit-account-info', 'User\UserAccountController@postAccountInfoForm')->name('backpack.account.info.store');
         Route::post('change-password', 'User\UserAccountController@postChangePasswordForm')->name('backpack.account.password');
         Route::post('change-sentry', 'User\UserAccountController@postChangeSentryForm')->name('backpack.account.sentry');
+        Route::post('change-vault-token', 'User\UserAccountController@postChangeVaultTokenForm')->name('backpack.account.vault');
 
         Route::group(['prefix' => 'vault'], function() {
             Route::get('/', 'CMS\SecretsVault\VaultAccessController@index')->name('secret-vault');

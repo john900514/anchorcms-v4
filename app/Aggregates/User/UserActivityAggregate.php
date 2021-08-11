@@ -7,10 +7,12 @@ use App\Exceptions\User\UserActivityException;
 use App\StorableEvents\User\History\EmailHasBeenVerified;
 use App\StorableEvents\User\History\EmailUpdated;
 use App\StorableEvents\User\History\PasswordUpdated;
+use App\StorableEvents\User\History\SentryTokenUpdated;
 use App\StorableEvents\User\History\TimezoneUpdated;
 use App\StorableEvents\User\History\UserAssignCapeAndBayDepartment;
 use App\StorableEvents\User\History\UserAssignedClientLocation;
 use App\StorableEvents\User\History\UsernameUpdated;
+use App\StorableEvents\User\History\VaultTokenUpdated;
 use Spatie\EventSourcing\AggregateRoots\AggregateRoot;
 use App\StorableEvents\User\History\HistoryHasBeenEstablished;
 use \App\StorableEvents\User\History\UserAssignedCapeAndBayRole;
@@ -21,6 +23,7 @@ class UserActivityAggregate extends AggregateRoot
     protected $history = [];
     protected $verified = false;
     protected $department_location, $assigned_client;
+    protected $vault_token;
 
     protected static bool $allowConcurrency = true;
 
@@ -136,6 +139,14 @@ class UserActivityAggregate extends AggregateRoot
         $this->history[] = $history;
     }
 
+    public function applyVaultTokenUpdated(VaultTokenUpdated $event)
+    {
+        $history['message'] = 'Vault Token Updated to ' . $event->token;
+
+        $this->history[] = $history;
+        $this->vault_token = $event->token;
+    }
+
     public function applyUserAssignCapeAndBayDepartment(UserAssignCapeAndBayDepartment $event)
     {
         $this->department_location = $event->dept;
@@ -181,6 +192,18 @@ class UserActivityAggregate extends AggregateRoot
     public function setTimezone(string $tz, string $old, string $date, string $modifier_id)
     {
         $this->recordThat(new TimezoneUpdated($this->uuid(), $tz, $old, $date, $modifier_id));
+        return $this;
+    }
+
+    public function setSentryToken(string $token = null)
+    {
+        $this->recordThat(new SentryTokenUpdated($this->uuid(), $token));
+        return $this;
+    }
+
+    public function setVaultToken(string $token = null)
+    {
+        $this->recordThat(new VaultTokenUpdated($this->uuid(), $token));
         return $this;
     }
 

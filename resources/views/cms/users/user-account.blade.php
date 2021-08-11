@@ -48,7 +48,7 @@
         @endif
 
         {{-- UPDATE INFO FORM --}}
-        <div class="col-lg-6">
+        <div class="col-lg-8">
             <form class="form" action="{{ route('backpack.account.info.store') }}" method="post">
 
                 {!! csrf_field() !!}
@@ -92,30 +92,61 @@
 
             {{-- Sentry User Form --}}
         @if(Bouncer::is(backpack_user())->a('developer'))
-            <div class="col-lg-6">
-                <form class="form" action="{{ route('backpack.account.sentry') }}" method="post">
+            <div class="col-lg-12"></div>
+            <div class="col-lg-4">
+                    <form class="form" action="{{ route('backpack.account.sentry') }}" method="post">
+                        {!! csrf_field() !!}
+
+                        <div class="card padding-10">
+                            <div class="card-header">
+                                Sentry Account
+                            </div>
+
+                            <div class="card-body backpack-profile-form bold-labels">
+                                <div class="column">
+                                    <div class="col-md-12 form-group">
+                                        @php
+                                            $field = 'sentry_auth_token';
+                                        @endphp
+                                        <label class="required">Sentry Auth Token</label>
+                                        <input autocomplete="sentry-auth-token" required class="form-control" type="text" name="{{ $field }}" id="{{ $field }}" value="{!! $sentry_auth_token !!}">
+                                        <small class="help-block" style="color: #666666">Required to Connect to Sentry and assign tickets. Log in with your account at https://sentry.io/settings/account/api/auth-tokens/</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-success"><i class="fad fa-save"></i> Update Sentry Config </button>
+                                <a href="{{ backpack_url() }}" class="btn">{{ trans('backpack::base.cancel') }}</a>
+                            </div>
+                        </div>
+                    </form>
+            </div>
+
+            <div class="col-lg-4">
+                <form class="form" action="{{ route('backpack.account.vault') }}" method="post">
                     {!! csrf_field() !!}
 
                     <div class="card padding-10">
                         <div class="card-header">
-                            Sentry Account
+                            Secret Vault
                         </div>
 
                         <div class="card-body backpack-profile-form bold-labels">
                             <div class="column">
                                 <div class="col-md-12 form-group">
                                     @php
-                                        $field = 'sentry_auth_token';
+                                        $field = 'vault_auth_token';
                                     @endphp
-                                    <label class="required">Sentry Auth Token</label>
-                                    <input autocomplete="sentry-auth-token" required class="form-control" type="text" name="{{ $field }}" id="{{ $field }}" value="{!! $sentry_auth_token !!}">
-                                    <small class="help-block" style="color: #666666">Required to Connect to Sentry and assign tickets. Log in with your account at https://sentry.io/settings/account/api/auth-tokens/</small>
+                                    <label class="required">Vault Auth Token</label>
+                                    <input autocomplete="sentry-auth-token" class="form-control" type="text" name="{{ $field }}" id="{{ $field }}" value="{!! $$field !!}">
+                                    <small class="help-block" style="color: #666666">Required to Connect to the 1Password Server and Access the Vault. Retrieve a token by contacting your department head.</small>
                                 </div>
                             </div>
                         </div>
 
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-success"><i class="fad fa-save"></i> Update Sentry Config </button>
+                            <button type="submit" class="btn btn-success"><i class="fad fa-save"></i> Update Vault Token </button>
                             <a href="{{ backpack_url() }}" class="btn">{{ trans('backpack::base.cancel') }}</a>
                         </div>
                     </div>

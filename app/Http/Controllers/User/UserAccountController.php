@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\User;
 
 use Alert;
+use App\Aggregates\User\UserActivityAggregate;
 use Bouncer;
 use App\Models\UserDetails;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Backpack\CRUD\app\Http\Requests\AccountInfoRequest;
 use Backpack\CRUD\app\Http\Requests\ChangePasswordRequest;
@@ -30,13 +32,15 @@ class UserAccountController extends Controller
 
         if(Bouncer::is(backpack_user())->a('developer'))
         {
-            $this->data['sentry_auth_token'] = '';
             $sentry_auth_token = backpack_user()->sentry_auth_token()->first();
+            $this->data['sentry_auth_token'] = (!is_null($sentry_auth_token))
+                ? $sentry_auth_token->value
+                : '';
 
-            if(!is_null($sentry_auth_token))
-            {
-                $this->data['sentry_auth_token'] = $sentry_auth_token->value;
-            }
+            $vault_auth_token  = Cache::get(backpack_user()->id.'-vault-auth-token', backpack_user()->vault_auth_token()->first());
+            $this->data['vault_auth_token'] = (!is_null($vault_auth_token))
+                ? $vault_auth_token->value
+                : '';
         }
 
         return view('cms.users.user-account', $this->data);
@@ -102,11 +106,65 @@ class UserAccountController extends Controller
             }
 
             $detail_record->save();
+            UserActivityAggregate::retrieve(backpack_user()->id)
+                ->setSentryToken($token)
+                ->persist();
 
             Alert::success('Sentry Config Info Updated!')->flash();
         }
         else {
             Alert::error('Input a Token to save it!')->flash();
+        }
+
+        return redirect()->back();
+    }
+
+    public function postChangeVaultTokenForm(Request $request, UserDetails $details)
+    {
+        $data = $request->all();
+        $user = backpack_user();
+
+        if(array_key_exists('vault_auth_token', $data) && (!is_null($data['vault_auth_token'])))
+        {
+            // first or create the record
+            $payload = [
+                'user_id' => $user->id,
+                'detail' => '1password-token',
+                'active' => true
+            ];
+
+            $model = $details->firstOrCreate($payload);
+            $model->value = $data['vault_auth_token'];
+            $model->save();
+
+            // @todo - Run the aggy, which will trigger the projector and reactor
+            UserActivityAggregate::retrieve($user->id)
+                ->setVaultToken($data['vault_auth_token'])
+                ->persist();
+
+            Alert::success('Successfully updated your Vault Token!')->flash();
+        }
+        else
+        {
+            $token = $user->vault_auth_token()->first();
+
+            // If no token exists, alert an error
+            if(is_null($token))
+            {
+                Alert::error('Input a Token to save it and generate your vault access!')->flash();
+            }
+            else
+            {
+                // if token exists, deactivate it
+                $token->active = false;
+                $token->save();
+
+                // @todo - Run the aggy, which will trigger the projector and reactor
+                UserActivityAggregate::retrieve($user->id)
+                    ->setVaultToken(null)->persist();
+
+                Alert::warning('Your Vault Token was removed. Access to the vault has been removed. To restore access, save a new token')->flash();
+            }
         }
 
         return redirect()->back();

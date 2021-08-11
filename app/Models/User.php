@@ -58,7 +58,13 @@ class User extends RedfieldUser
 
     public function vault_auth_token()
     {
-        return $this->detail()->whereDetail('1password-token');
+        return $this->detail()->whereDetail('1password-token')
+            ->whereActive(true);
+    }
+
+    public function location_or_department()
+    {
+        return $this->detail()->whereDetail('location-department');
     }
 
     public function timezone()
