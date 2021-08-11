@@ -1,9 +1,9 @@
 @if (config('backpack.base.scripts') && count(config('backpack.base.scripts')))
     @foreach (config('backpack.base.scripts') as $path)
         @if (app()->environment('local'))
-            <script type="text/javascript" src="{{ asset('js/router-app.js').'?v='.config('backpack.base.cachebusting_string') }}"></script>
+            <script type="text/javascript" src="{{ asset('js/app.js').'?v='.config('backpack.base.cachebusting_string') }}"></script>
         @else
-            <script type="text/javascript" src="{{ mix('js/router-app.js').'?v='.config('backpack.base.cachebusting_string') }}"></script>
+            <script type="text/javascript" src="{{ mix('js/app.js').'?v='.config('backpack.base.cachebusting_string') }}"></script>
         @endif
     @endforeach
 @endif

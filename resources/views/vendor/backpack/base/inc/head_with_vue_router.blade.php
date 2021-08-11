@@ -14,11 +14,7 @@
             @if (app()->environment('local'))
                 <link rel="stylesheet" type="text/css" href="{{ asset($path).'?v='.config('backpack.base.cachebusting_string') }}">
             @else
-                @if($path == 'css/app.css')
-                    <link rel="stylesheet" type="text/css" href="{{ mix($path).'?v='.config('backpack.base.cachebusting_string') }}">
-                @else
-                    <link rel="stylesheet" type="text/css" href="{{ asset($path).'?v='.config('backpack.base.cachebusting_string') }}">
-                @endif
+                <link rel="stylesheet" type="text/css" href="{{ mix($path).'?v='.config('backpack.base.cachebusting_string') }}">
             @endif
         @endforeach
     @endif
