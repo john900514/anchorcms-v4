@@ -1,5 +1,8 @@
 {
-    "/js/app.js": "/js/app.js",
     "/js/router-app.js": "/js/router-app.js",
+    "/js/app.js": "/js/app.js",
+    "/js/vault-index.js": "/js/vault-index.js",
+    "/js/list-of-vaults-page.js": "/js/list-of-vaults-page.js",
+    "/js/vault-items-page.js": "/js/vault-items-page.js",
     "/css/app.css": "/css/app.css"
 }

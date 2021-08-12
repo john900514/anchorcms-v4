@@ -27,9 +27,7 @@ class VaporUiServiceProvider extends ServiceProvider
     protected function gate()
     {
         Gate::define('viewVaporUI', function ($user = null) {
-            return in_array(optional($user)->email, [
-                // 
-            ]);
+            return Bouncer::is(backpack_user())->a('developer');
         });
     }
 
