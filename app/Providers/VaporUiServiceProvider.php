@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Silber\Bouncer\BouncerFacade as Bouncer;
 
 class VaporUiServiceProvider extends ServiceProvider
 {
