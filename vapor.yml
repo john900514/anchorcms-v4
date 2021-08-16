@@ -24,7 +24,7 @@ environments:
         database: anchor-dev-stage
         cache: anchor-cms-cache
         timeout: 120
-        queue-memory: 2048
+        queue-memory: 4096
         queue-timeout: 600
         queue-concurrency: 6
         queues:

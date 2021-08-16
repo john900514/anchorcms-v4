@@ -59,15 +59,13 @@ class CacheTheBillingImport implements ShouldQueue
             $end_date = date('Y-m-d', strtotime($newest_record->lineitem_usagestartdate));
             $first_date = date('Y-m-', strtotime($newest_record->lineitem_usagestartdate)).'01';
             $current_date_being_worked_on = $first_date;
-
+            $cq_chain = [];
             /* Caching Total Billing By Date */
             while($current_date_being_worked_on != $end_date)
             {
                 echo "Date Being Worked On - {$current_date_being_worked_on} \n";
                 $cache_key = env('APP_ENV').'-'.$this->report_id.'-total_activity-'.$current_date_being_worked_on;
-                Cache::put($cache_key,
-                    $billing->getAllRecordsByDate($current_date_being_worked_on),
-                    (60 * 60) * 2);
+                $cq_chain[] = new CacheTheTotalsByDate($cache_key, $current_date_being_worked_on, $table_date);
 
                 $current_date_being_worked_on = date('Y-m-d', strtotime("$current_date_being_worked_on +1DAY"));
                 //dd("Next Date - {$current_date_being_worked_on}");
@@ -78,9 +76,7 @@ class CacheTheBillingImport implements ShouldQueue
                 echo "Final Date = {$current_date_being_worked_on} \n";
                 $cache_key = env('APP_ENV').'-'.$this->report_id.'-total_activity-'.$current_date_being_worked_on;
 
-                Cache::put($cache_key,
-                    $billing->where('lineitem_usagestartdate', 'LIKE', "%$current_date_being_worked_on%")->orderBy('identity_timeinterval', 'ASC')->get(),
-                    (60 * 2) * 2);
+                $cq_chain[] = new CacheTheTotalsByDate($cache_key, $current_date_being_worked_on, $table_date);
 
                 // Resetting the current date to the first date for the next bit of caching logic
                 $current_date_being_worked_on = $first_date;
@@ -88,6 +84,13 @@ class CacheTheBillingImport implements ShouldQueue
             else
             {
                 echo "Ooops did I miss something? = {$current_date_being_worked_on} \n";
+            }
+
+            if(count($cq_chain) > 0)
+            {
+                Bus::chain($cq_chain)
+                    ->onQueue(env('APP_ENV').'-anchor-cache')
+                    ->dispatch();
             }
 
             echo "Getting the Products AWS Nickel and Dime's us over...\n";
