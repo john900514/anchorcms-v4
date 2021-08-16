@@ -20,11 +20,13 @@ environments:
         domain: anchor4dev.capeandbay.com
         runtime: docker
         memory: 1024
-        cli-memory: 512
+        cli-memory: 1024
         database: anchor-dev-stage
         cache: anchor-cms-cache
         timeout: 120
-        queue-concurrency: 50
+        queue-memory: 2048
+        queue-timeout: 600
+        queue-concurrency: 6
         queues:
             - staging-anchor-events
             - staging-anchor-cache
@@ -35,11 +37,13 @@ environments:
     develop:
         runtime: docker
         memory: 1024
-        cli-memory: 512
+        cli-memory: 1024
         database: anchor-dev-stage
         cache: anchor-cms-cache
         timeout: 120
-        queue-concurrency: 50
+        queue-memory: 2048
+        queue-timeout: 600
+        queue-concurrency: 3
         queues:
             - develop-anchor-events
             - develop-anchor-cache
