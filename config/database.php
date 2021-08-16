@@ -121,6 +121,18 @@ return [
             'schema' => 'public',
             'sslmode' => 'prefer',
         ],
+        'aws-billing' => [
+            'driver' => 'pgsql',
+            'host' => env('REDFIELD_HOST', '127.0.0.1'),
+            'port' => env('REDFIELD_PORT', '5439'),
+            'database' => env('BILLING_DATABASE', 'aws_billing'),
+            'username' => env('REDFIELD_USERNAME', 'forge'),
+            'password' => env('REDFIELD_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
     ],
 
     /*
@@ -152,6 +164,7 @@ return [
         'client' => env('REDIS_CLIENT', 'phpredis'),
 
         'options' => [
+            'read_write_timeout' => 0,
             'cluster' => env('REDIS_CLUSTER', 'redis'),
             'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
         ],

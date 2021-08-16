@@ -11,6 +11,7 @@ environments:
         queue-concurrency: 5
         queues:
             - production-anchor-events
+            - production-anchor-cache
         build:
             - 'COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev'
             - 'php artisan event:cache'
@@ -26,6 +27,7 @@ environments:
         queue-concurrency: 50
         queues:
             - staging-anchor-events
+            - staging-anchor-cache
         build:
             - 'COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev'
             - 'php artisan event:cache'
@@ -40,6 +42,7 @@ environments:
         queue-concurrency: 50
         queues:
             - develop-anchor-events
+            - develop-anchor-cache
         build:
             - 'COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev'
             - 'php artisan event:cache'
