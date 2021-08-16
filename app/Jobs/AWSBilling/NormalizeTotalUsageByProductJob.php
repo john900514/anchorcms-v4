@@ -50,8 +50,7 @@ class NormalizeTotalUsageByProductJob implements ShouldQueue
             foreach ($billable_products as $product)
             {
                 echo "Product Being Worked On - {$product} \n";
-                $cache_key = env('APP_ENV').'-'.$this->report_id.'-total_product_activity-'.$product;
-                $current_products = Cache::get($cache_key, $billing->getAllRecordsByProduct($product));
+                $current_products = $billing->getAllRecordsByProduct($product, true);
 
                 if(count($current_products) > 0)
                 {
@@ -70,6 +69,11 @@ class NormalizeTotalUsageByProductJob implements ShouldQueue
                     $model->usage_cost = number_format($usage_cost, 2, '.', '');
                     $model->save();
                 }
+
+                //$cache_key = env('APP_ENV').'-'.$this->report_id.'-total_product_activity-'.$product;
+                //$current_products = Cache::get($cache_key, $billing->getAllRecordsByProduct($product));
+
+
             }
         }
     }

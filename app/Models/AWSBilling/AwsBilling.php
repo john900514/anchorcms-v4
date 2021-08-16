@@ -52,11 +52,20 @@ class AwsBilling extends Model
         return $results;
     }
 
-    public function getAllRecordsByProduct(string $product)
+    public function getAllRecordsByProduct(string $product, bool $cursor = false)
     {
         $results = [];
 
-        $records = $this->where('lineitem_productcode', '=', $product)->get();
+        $records = $this->where('lineitem_productcode', '=', $product);
+
+        if($cursor)
+        {
+            $records = $records->cursor();
+        }
+        else
+        {
+            $records = $records->get();
+        }
 
         if(count($records) > 0)
         {
