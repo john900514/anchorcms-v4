@@ -61,7 +61,7 @@ class CacheTheBillingNormalizers implements ShouldQueue
 
             $cache_key = env('APP_ENV').'-billing-product-names';
             //$billable_products = Cache::remember($cache_key, (60 * 60) * 2, function () use($billing) {
-            $billable_products = Cache::remember($cache_key, (60 * 2), function () use($billing) {
+            $billable_products = Cache::remember($cache_key, (60 * 60), function () use($billing) {
                 return $billing->getUniqueProductsAsArray();
             });
 
@@ -163,10 +163,10 @@ class CacheTheBillingNormalizers implements ShouldQueue
                             $save_cache_key_ops  = env('APP_ENV').'-'.$this->report_id.'-total-'.$product.'-operation-activity-'.$current_date_being_worked_on;
 
                             Cache::remember($save_cache_key_type,
-                                (60 * 60) * 2, function() use($product_type_records) { return $product_type_records;});
+                                (60 * 15) , function() use($product_type_records) { return $product_type_records;});
 
                             Cache::remember($save_cache_key_ops,
-                                (60 * 60) * 2, function() use($type_operation_records) { return $type_operation_records; });
+                                (60 * 15), function() use($type_operation_records) { return $type_operation_records; });
                         }
                     }
                 }

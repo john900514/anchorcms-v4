@@ -96,7 +96,7 @@ class CacheTheBillingImport implements ShouldQueue
             echo "Getting the Products AWS Nickel and Dime's us over...\n";
             $cache_key = env('APP_ENV').'-billing-product-names';
             //$billable_products = Cache::remember($cache_key, (60 * 60) * 2, function () use($billing) {
-            $billable_products = Cache::remember($cache_key, (60 * 2), function () use($billing) {
+            $billable_products = Cache::remember($cache_key, (60 * 60), function () use($billing) {
                 return $billing->getUniqueProductsAsArray();
             });
 
@@ -112,7 +112,6 @@ class CacheTheBillingImport implements ShouldQueue
                     echo "Product Being Worked On - {$product} \n";
                     $q_chain[] = new CacheTheTotalProducts($cache_key, $product, $table_date);
                 }
-
 
                 Bus::chain($q_chain)
                     ->onQueue(env('APP_ENV').'-anchor-cache')

@@ -29,6 +29,7 @@
         "lorisleiva/laravel-actions": "^2.1",
         "predis/predis": "^1.1",
         "ramsey/uuid": "^4.1",
+        "sentry/sentry-laravel": "^2.8",
         "silber/bouncer": "v1.0.0-rc.10",
         "spatie/laravel-activitylog": "^4.0",
         "spatie/laravel-event-sourcing": "^4.10",

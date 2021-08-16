@@ -19,8 +19,8 @@ environments:
     staging:
         domain: anchor4dev.capeandbay.com
         runtime: docker
-        memory: 1024
-        cli-memory: 1024
+        memory: 2048
+        cli-memory: 2048
         database: anchor-dev-stage
         cache: anchor-cms-cache
         timeout: 120
@@ -36,12 +36,12 @@ environments:
             - 'npm ci && npm run prod && rm -rf node_modules'
     develop:
         runtime: docker
-        memory: 1024
-        cli-memory: 1024
+        memory: 2048
+        cli-memory: 2048
         database: anchor-dev-stage
         cache: anchor-cms-cache
         timeout: 120
-        queue-memory: 2048
+        queue-memory: 4096
         queue-timeout: 600
         queue-concurrency: 3
         queues:

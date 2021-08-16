@@ -24,7 +24,7 @@ class AWSBillingHistoryProjector extends Projector
         {
             case 'imported':
                 $q_chain = [
-                    new CacheTheBillingImport($event->report), // cache the data
+                    //new CacheTheBillingImport($event->report), // cache the data
                     new NormalizeTotalUsageByDateJob($event->report),
                     new NormalizeTotalUsageByProductJob($event->report),
                     new NormalizeTotalUsageByProductAndDateJob($event->report),
