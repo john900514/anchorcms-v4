@@ -162,11 +162,13 @@ class CacheTheBillingNormalizers implements ShouldQueue
                             $save_cache_key_type = env('APP_ENV').'-'.$this->report_id.'-total-'.$product.'-type-activity-'.$current_date_being_worked_on;
                             $save_cache_key_ops  = env('APP_ENV').'-'.$this->report_id.'-total-'.$product.'-operation-activity-'.$current_date_being_worked_on;
 
-                            Cache::remember($save_cache_key_type,
-                                (60 * 15) , function() use($product_type_records) { return $product_type_records;});
+                            Cache::put($save_cache_key_type,
+                                json_encode($product_type_records),
+                                (60 * 60) * 2);
 
-                            Cache::remember($save_cache_key_ops,
-                                (60 * 15), function() use($type_operation_records) { return $type_operation_records; });
+                            Cache::put($save_cache_key_ops,
+                                json_encode($type_operation_records),
+                                (60 * 60) * 2);
                         }
                     }
                 }
