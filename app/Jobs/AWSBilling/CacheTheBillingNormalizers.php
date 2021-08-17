@@ -76,7 +76,7 @@ class CacheTheBillingNormalizers implements ShouldQueue
                     {
                         echo "Product/Date Being Worked On - {$product} {$current_date_being_worked_on} \n";
                         $cache_key = env('APP_ENV').'-'.$this->report_id.'-total-'.$product.'-activity-'.$current_date_being_worked_on;
-                        $current_days_current_products = Cache::get($cache_key, $billing->getAllRecordsByProductAndDate($product, $current_date_being_worked_on));
+                        $current_days_current_products = Cache::get($cache_key, $billing->getAllRecordsByProductAndDate($product, $current_date_being_worked_on, true));
                         if(count($current_days_current_products) > 0)
                         {
                             $product_type_records = [];
@@ -110,11 +110,11 @@ class CacheTheBillingNormalizers implements ShouldQueue
                             $save_cache_key_ops  = env('APP_ENV').'-'.$this->report_id.'-total-'.$product.'-operation-activity-'.$current_date_being_worked_on;
 
                             Cache::put($save_cache_key_type,
-                                $product_type_records,
+                                json_encode($product_type_records),
                                 (60 * 60) * 2);
 
                             Cache::put($save_cache_key_ops,
-                                $type_operation_records,
+                                json_encode($type_operation_records),
                                 (60 * 60) * 2);
                         }
                     }

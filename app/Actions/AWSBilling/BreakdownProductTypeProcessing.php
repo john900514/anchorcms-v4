@@ -15,7 +15,7 @@ class BreakdownProductTypeProcessing
         echo "Product/Date Being Worked On - {$product} {$current_date_being_worked_on} \n";
         $save_cache_key_type = env('APP_ENV').'-'.$report_id.'-total-'.$product.'-type-activity-'.$current_date_being_worked_on;
 
-        $product_type_records = Cache::get($save_cache_key_type, []);
+        $product_type_records = json_decode(Cache::get($save_cache_key_type, json_encode([])), true);
 
         if(count($product_type_records) > 0)
         {

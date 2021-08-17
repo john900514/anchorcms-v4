@@ -62,7 +62,7 @@ class NormalizeTotalUsageByProductTypeOperationAndDateJob implements ShouldQueue
                     echo "Product/Date Being Worked On - {$product} {$current_date_being_worked_on} \n";
                     $save_cache_key_ops  = env('APP_ENV').'-'.$this->report_id.'-total-'.$product.'-operation-activity-'.$current_date_being_worked_on;
 
-                    $product_type_records = Cache::get($save_cache_key_ops);
+                    $product_type_records = json_decode(Cache::get($save_cache_key_ops, json_encode([])), true);
 
                     if(count($product_type_records) > 0)
                     {

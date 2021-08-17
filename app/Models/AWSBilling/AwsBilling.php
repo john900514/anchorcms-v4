@@ -75,14 +75,22 @@ class AwsBilling extends Model
         return $results;
     }
 
-    public function getAllRecordsByProductAndDate(string $product, string $date)
+    public function getAllRecordsByProductAndDate(string $product, string $date, bool $cursor = false)
     {
         $results = [];
 
         $records = $this->where('lineitem_productcode', '=', $product)
             ->where('lineitem_usagestartdate', 'LIKE', "%$date%")
-            ->orderBy('identity_timeinterval', 'ASC')
-            ->get();
+            ->orderBy('identity_timeinterval', 'ASC');
+
+        if($cursor)
+        {
+            $records = $records->cursor();
+        }
+        else
+        {
+            $records = $records->get();
+        }
 
         if(count($records) > 0)
         {
