@@ -72,4 +72,10 @@ class User extends RedfieldUser
         return $this->hasOne('App\Models\UserDetails', 'user_id', 'id')
             ->whereDetail('timezone');
     }
+
+    public function is_client_user()
+    {
+        return $this->detail()->whereDetail('is_client_user')
+                ->whereActive(true);
+    }
 }

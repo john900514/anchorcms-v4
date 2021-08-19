@@ -67,7 +67,7 @@ class NormalizeTotalUsageByDateJob implements ShouldQueue
         ];
 
         $model = $total_usage_model->firstOrCreate($payload);
-        $model->usage_cost = number_format($this->total_usage_cost, 2, '.');
+        $model->usage_cost = number_format($this->total_usage_cost, 2, '.', '');
         $model->save();
     }
 
@@ -84,7 +84,6 @@ class NormalizeTotalUsageByDateJob implements ShouldQueue
             {
                 $usage_cost += $record['pricing_publicondemandcost'];
                 $this->total_usage_cost += $record['pricing_publicondemandcost'];
-
             }
 
             $payload = [

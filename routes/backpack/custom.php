@@ -41,7 +41,14 @@ Route::group([
     ),
     'namespace'  => 'App\Actions',
 ], function () { // custom admin routes
+    Route::get('/dashboard', 'Auth\Dashboards\LoadDashboardController');
     Route::post('/sso', 'Auth\SingleSignOn\GenerateRequest');
+
+    Route::get('/sso/generator', 'Utility\ShowComingSoon');
+    Route::get('/work-tickets', 'Utility\ShowComingSoon');
+    Route::get('/analytics', 'Utility\ShowComingSoon');
+    Route::get('/products/integrations', 'Utility\ShowComingSoon');
+    Route::get('/projects/code-reviews');
 });
 
 Route::group([
